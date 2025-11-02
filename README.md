@@ -98,13 +98,25 @@ ssh-keygen -t rsa -b 4096
 
 # 8) Create kubernetes cluster definitions on S3 bucket
 ```sh
-kops create cluster --zones us-east-1a --networking weave --master-size t2.medium --master-count 1 --node-size t2.medium --node-count=2 ${NAME}
+kops create cluster \
+    --name k8snewsalva.k8s.local \
+    --state s3://salva25kops \
+    --zones us-east-1a \
+    --networking weave \
+    --master-size t2.medium \
+    --master-count 1 \
+    --node-size t2.medium \
+    --node-count 2 \
+    --image ami-005f7d46f1adccabf
 # copy the sshkey into your cluster to be able to access your kubernetes node from the kops server
-kops create secret --name ${NAME} sshpublickey admin -i ~/.ssh/id_rsa.pub
+kops create secret sshpublickey admin \
+    --name k8snewsalva.k8s.local \
+    -i /home/kops/KopsKEY.pub \
+    --state s3://salva25kops
 ```
 # 9) Initialise your kops kubernetes cluser by running the command below
 ```sh
-kops update cluster ${NAME} --yes
+kops update cluster k8snewsalva.k8s.local --yes --state s3://salva25kops
 ```
 # 10a) Validate your cluster(KOPS will take some time to create cluster ,Execute below commond after 3 or 4 mins)
 
@@ -112,6 +124,10 @@ kops validate cluster
 	   
 	   Suggestions:
  * validate cluster: kops validate cluster --wait 10m
+   ```sh
+   kops validate cluster --name k8snewsalva.k8s.local --state s3://salva25kops --wait 10m
+   ```
+   
  * list nodes: kubectl get nodes --show-labels
  * ssh to the master: ssh -i ~/.ssh/id_rsa ubuntu@api.class.k8s.local
  * the ubuntu user is specific to Ubuntu. If not using Ubuntu please use the appropriate user based on your OS.
