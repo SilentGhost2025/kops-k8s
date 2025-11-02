@@ -28,10 +28,22 @@
  sudo echo "kops  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/kops
  sudo su - kops
  ```
- ##  2a) install AWSCLI using the apt package manager
+ ##  2a) install AWSCLI using the Standalone Installer
+ Download the Installer
   ```sh
- sudo apt install awscli -y 
+ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
  ```
+Unzip the File
+```sh
+sudo apt install unzip # Install unzip if you don't have it
+unzip awscliv2.zip
+```
+Run the install Program
+```sh
+sudo ./aws/install
+```
+This usually installs the AWS CLI to /usr/local/bin/aws
+
  ## or 2b) install AWSCLI using the script below
  ```sh
 sudo hostnamectl set-hostname kops
